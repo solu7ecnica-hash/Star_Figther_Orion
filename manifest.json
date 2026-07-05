@@ -1,0 +1,17 @@
+{
+  "short_name": "Star Fighter",
+  "name": "Star Fighter - Ferratech Jogos (Teste)",
+  "icons": [
+    {
+      "src": "logo_star_fight.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/Star_Figther_Orion/",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#000000"
+}
