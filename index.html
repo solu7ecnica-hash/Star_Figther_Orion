@@ -1,16 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" >
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Star Fighter - Ferratech Jogos Campanha Social</title>
-    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WHGRWM2R8F"></script>
+	<script>
+// Seus direitos autorais
+    const MENSAGEM_COPYRIGHT = "© Direitos Autorais Reservados - Star Fighter (Cmd. Mauro).";
+
+    // TRUQUE DE MESTRE: Se você colocar ?admin=1 no final do link do GitHub, a segurança DESLIGA!
+    // Exemplo: https://seu-usuario.github.io/seu-repositorio/figther_16.html?admin=1
+    const urlParams = new URLSearchParams(window.location.search);
+    const modoDesenvolvedor = urlParams.get('admin') === '1';
+
+    // Se o modo desenvolvedor estiver ativo, avisa no console secreto e libera a página
+    if (modoDesenvolvedor) {
+        console.log("🔓 MODO DESENVOLVEDOR ATIVO: Travas de segurança desabilitadas para investigação.");
+    } else {
+        // --- SE FOR UM USUÁRIO COMUM, AS TRAVAS FUNCIONAM NORMALMENTE ---
+
+        // 1. Bloqueia o Clique Direito
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert(MENSAGEM_COPYRIGHT);
+            return false;
+        });
+
+        // 2. Desabilita atalhos de teclado (F12, Ctrl+U, Ctrl+Shift+I)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'c') { e.preventDefault(); alert("Cópia proibida!\n" + MENSAGEM_COPYRIGHT); return false; }
+            if (e.ctrlKey && e.key === 'u') { e.preventDefault(); alert("Código protegido!\n" + MENSAGEM_COPYRIGHT); return false; }
+            if (
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) || 
+                e.key === 'F12'
+            ) {
+                e.preventDefault();
+                alert("Ferramentas bloqueadas!\n" + MENSAGEM_COPYRIGHT);
+                return false;
+            }
+        });
+
+        // 3. Desabilita a seleção de texto
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+    }
+</script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-WHGRWM2R8F');
+
+      // ========================================================
+      // 🎵 TRILHAS E EFEITOS - MISSÃO ÓRION
+      // ========================================================
+      const somCombate = new Audio('combate.mp3');   
+      somCombate.loop = true; // Definido como true para tocar continuamente durante o jogo
+      const somSuspense = new Audio('suspense.mp3'); 
+
+      somSuspense.volume = 0.2;
+      somCombate.volume = 0.2;
+
+      // VARIÁVEIS GLOBAIS DA MISSÃO ÓRION
+      var inimigosOrion = [];
+      var spawnTimerOrion = 0;
+      var batedoresAbatidos = 0;
+      var animacaoConcluida = false;
+      var segurancaIntroTimer = 0;
+      var chefonaAtiva = false;
+	  
+	  // 2. Desabilita atalhos de teclado comuns para cópia e inspeção
+    document.addEventListener('keydown', function(e) {
+        // Bloqueia Ctrl+C (Copiar)
+        if (e.ctrlKey && e.key === 'c') {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Bloqueia Ctrl+U (Ver Código Fonte)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+
+        // Bloqueia Ctrl+Shift+I ou F12 (Inspecionar Elemento / Ferramentas do Desenvolvedor)
+        if ((e.ctrlKey && e.shiftKey && e.key === 'I') || e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // 3. Desabilita a seleção de texto por segurança extra via script
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+	
     </script>
 
     <style>
@@ -41,13 +129,225 @@
             display: block !important; 
             background-color: #0b0b16 !important;
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
+        body {
+            -webkit-user-select: none;  
+            -moz-user-select: none;     
+            -ms-user-select: none;      
+            user-select: none;          
+        }
+		
+		
+		
+		
+		
+		
+		<style>
+    /* Esconde elementos desnecessários da página */
+    .bg-photo-overlay, .bg-photo-container, .centered-top-placeholder, 
+    .centered-top-container, header, .skip-navigation, .sidebar-container {
+        display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;
+    }
+    
+    .page, .page_body, .centered, .centered-bottom, .main, .main-section {
+        padding: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;
+    }
+    
+    /* Configuração do Corpo da Página */
+    html, body {
+        margin: 0; 
+        padding: 0; 
+        width: 100%; 
+        height: 100%;
+        background-color: #000; 
+        overflow: hidden;
+        font-family: sans-serif;
+        -webkit-user-select: none;  
+        -moz-user-select: none;     
+        -ms-user-select: none;      
+        user-select: none;   
+    }
+
+    /* O PAINEL SUPERIOR (Sempre com Z-Index Absoluto e Fixo no topo) */
+    #painel-superior {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        z-index: 200000000 !important; /* Ganha do 999999 da caixa do jogo */
+        background: rgba(10, 15, 30, 0.95) !important;
+        border-bottom: 3px solid #00e5ff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
+        font-family: 'Courier New', Courier, monospace;
+        color: #fff;
+    }
+
+    /* Container do Jogo (Ocupa a tela inteira, mas o painel flutua sobre ele) */
+    .caixa-jogo-fixa {
+        position: fixed !important;
+        top: 0 !important; 
+        left: 0 !important;
+        width: 100vw !important; 
+        height: 100vh !important;
+        background-color: #05050a !important;
+        z-index: 999999 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Renderização limpa do Canvas */
+    canvas { 
+        display: block !important; 
+        background-color: #0b0b16 !important;
+        box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
+	
+	<style>
+    /* Esconde elementos desnecessários da página */
+    .bg-photo-overlay, .bg-photo-container, .centered-top-placeholder, 
+    .centered-top-container, header, .skip-navigation, .sidebar-container {
+        display: none !important; height: 0 !important; padding: 0 !important; margin: 0 !important;
+    }
+    
+    .page, .page_body, .centered, .centered-bottom, .main, .main-section {
+        padding: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;
+    }
+    
+    /* Configuração do Corpo da Página */
+    html, body {
+        margin: 0; 
+        padding: 0; 
+        width: 100%; 
+        height: 100%;
+        background-color: #000; 
+        overflow: hidden;
+        font-family: sans-serif;
+        -webkit-user-select: none;  
+        -moz-user-select: none;     
+        -ms-user-select: none;      
+        user-select: none;   
+    }
+
+    /* O PAINEL SUPERIOR (Sempre com Z-Index Absoluto e Fixo no topo) */
+    #painel-superior {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        z-index: 200000000 !important; /* Ganha do 999999 da caixa do jogo */
+        background: rgba(10, 15, 30, 0.95) !important;
+        border-bottom: 3px solid #00e5ff !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
+        font-family: 'Courier New', Courier, monospace;
+        color: #fff;
+    }
+
+    /* Container do Jogo (Ocupa a tela inteira, mas o painel flutua sobre ele) */
+    .caixa-jogo-fixa {
+        position: fixed !important;
+        top: 0 !important; 
+        left: 0 !important;
+        width: 100vw !important; 
+        height: 100vh !important;
+        background-color: #05050a !important;
+        z-index: 999999 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Renderização limpa do Canvas */
+    canvas { 
+        display: block !important; 
+        background-color: #0b0b16 !important;
+        box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
+</style>
+</style>
+
+
     </style>
 </head>
+
 <body>
+<div id="tela-splash" style="position: fixed !important; 
+ top: 0 !important; left: 0 !important; width: 100vw !important; 
+ height: 100vh !important; background-color: #000000 !important; 
+ background-image: url('TELA.png') !important; background-position: 
+ center !important; background-repeat: no-repeat !important; background-size: 
+ contain !important; z-index: 99999999 !important;"></div>
 
 <div class="caixa-jogo-fixa">
     <canvas id="gameCanvas"></canvas>
+
+ 
+
+    <div id="janela-loja-ferratech" style="
+        display: none; 
+        position: fixed !important; 
+        top: 0 !important; 
+        left: 0 !important; 
+        width: 100vw !important; 
+        height: 100vh !important; 
+        background-color: rgba(0, 0, 0, 0.95) !important; 
+        z-index: 100000001 !important; 
+        justify-content: center !important; 
+        align-items: center !important; 
+        font-family: 'Courier New', monospace !important; 
+        color: #fff !important;">
+		
+        <div style="background: #111; border: 3px solid #00ffcc; border-radius: 12px; width: 90%; max-width: 450px; padding: 20px; box-shadow: 0 0 25px #00ffcc; text-align: center;">
+            <h2 style="color: #00ffcc; margin-top: 0; text-shadow: 0 0 5px #00ffcc;">LOJA FERRATECH</h2>
+            <p style="font-size: 16px; border-bottom: 1px dashed #333; padding-bottom: 10px;">
+                🎒 Saldo da Mochila: <span id="loja-saldo-moedas" style="color: #ffaa00; font-weight: bold;">0</span> Moedas
+            </p>
+            
+            <div style="margin: 20px 0; text-align: left; display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #00ffcc;">
+                    <div><strong style="color: #00ffcc;">🛡️ Escudo Modo Deus</strong><br><span style="font-size: 11px; color: #aaa;">Invencibilidade por 5s</span></div>
+                    <button onclick="comprarItemLoja('escudo', 50)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">50 M</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #ff3333;">
+                    <div><strong style="color: #ff3333;">🚀 Mísseis Extras</strong><br><span style="font-size: 11px; color: #aaa;">+5 Projéteis pesados</span></div>
+                    <button onclick="comprarItemLoja('misseis', 30)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">30 M</button>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #ffff00;">
+                    <div><strong style="color: #ffff00;">⚡ Laser Contínuo</strong><br><span style="font-size: 11px; color: #aaa;">Segure para disparar contínuo</span></div>
+                    <button id="btn-comprar-laser" onclick="comprarItemLoja('laser', 100)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">100 M</button>
+                </div>
+				<div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #ffaa00;">
+		<div><strong style="color: #ffaa00;">🍔 X-Ferratech Combo</strong><br><span style="font-size: 11px; color: #aaa;">Bateu aquela fome no espaço?</span></div>
+		<button onclick="comprarItemLoja('lanche', 80)" style="background: #ff5555; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#fff;">80 M</button>
+		</div>
+
+		<div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #00aaff;">
+			<div><strong style="color: #00aaff;">🥤 Refrigerante Especial</strong><br><span style="font-size: 11px; color: #aaa;">0% Marcas, 100% Prejuízo</span></div>
+		<button onclick="comprarItemLoja('refri', 40)" style="background: #ff5555; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#fff;">40 M</button>
+		</div>
+            </div>
+
+            <button onclick="fecharLojaFerratech()" style="background: #00ffcc; color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; font-size: 14px; border-radius: 6px; cursor: pointer; margin-top: 10px;">
+                ◀ VOLTAR PARA O COMBATE
+            </button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -61,25 +361,39 @@
     const imgBatedor2 = new Image(); imgBatedor2.src = "batedor_2.png"; 
     const imgBolaMaldita = new Image(); imgBolaMaldita.src = "bola_maldita.png"; 
     const imgChefao = new Image(); imgChefao.src = "chefao.png"; 
-    const imgFundo = new Image(); imgFundo.src = "fundo.jpg"; 
     const imgDengosao = new Image(); imgDengosao.src = "dengosao.png";
-    const imgFerrao = new Image(); imgFerrao.src = "ferrao.png";
 
-    // Assets da Fase 4 (Asteroides)
     const imgAsteroide1 = new Image(); imgAsteroide1.src = "asteroide_1.png";
     const imgAsteroide2 = new Image(); imgAsteroide2.src = "asteroide_2.png";
     const imgAsteroide3 = new Image(); imgAsteroide3.src = "asteroide_3.png";
 
-    // Assets da Animação da Estação Espacial e Cockpit
-    const imgCockpit = new Image(); imgCockpit.src = "cockpit.png";
+    const imgCockpit = new Image(); imgCockpit.src = "cockpit_2.png";
     const imgBaseEspacial = new Image(); imgBaseEspacial.src = "base.png";
     const imgSalaControle = new Image(); imgSalaControle.src = "sala.png";
-    const imgMissil = new Image(); imgMissil.src = "missil.png";
+    
+    const imgMissil = new Image(); imgMissil.src = "m_2.png"; 
+
+    // --- MECÂNICA DE MOEDAS ESPECIAIS ---
+    // --- MECÂNICA DE MOEDAS E CARTEIRA SINCRONIZADA ---
+let moedasColetadas = parseInt(localStorage.getItem("ferratech_creditos")) || 0;
+let moedasEspeciais = []; // Mantém a física das moedas flutuando na tela
+	
+	
+    window.MochilaIntercambio = {
+        forçarGatilho: null
+    };
 
     const estrelasFundo = [];
     for(let i = 0; i < 40; i++) {
         estrelasFundo.push({ x: Math.random() * 400, y: Math.random() * 800, tamanho: Math.random() * 2 + 1, vel: Math.random() * 2 + 1 });
     }
+
+    const estrelasEspeciais = [];
+    for(let i = 0; i < 8; i++) {
+        estrelasEspeciais.push({ x: 0, y: 0, brilho: Math.random(), fator: 0.02 + Math.random()*0.03 });
+    }
+
+    const planetaCinematica = { x: 0, y: 0, inicialX: 0, inicialY: 0, raio: 1, ativo: false };
 
     // Funções de Áudio
     function tocarSomTiro() {
@@ -103,9 +417,7 @@
         } catch (e) {} 
     }
 
-    // ==========================================
-    // LÓGICA DO CONTADOR DE PARTIDAS GTAG FIX
-    // ==========================================
+    // --- CONTADOR DE PARTIDAS LOCALSTORAGE ---
     let totalPartidasGerais = parseInt(localStorage.getItem("ferratech_partidas_locais")) || 142;
 
     function registrarNovaPartida() {
@@ -134,30 +446,34 @@
     let tremorCena = 0; 
     let anguloRotacaoGeral = 0; 
 
-    // VARIÁVEIS DA ANIMAÇÃO CINEMÁTICA ORION (ENTRADA DO JOGO)
+    // Animação Entrada
     let subEstadoOrion = "COCKPIT_DIMINUINDO";
-    let escalaCockpitOrion = 1.0;
-    let escalaNaveOrion = 4.0; 
+    let escalaCockpitOrion = 3.5; 
+    let escalaNaveOrion = 10.0;    
+    let opacidadeTransicaoOrion = 0; 
+    let faseLuzOrion = "ESCURECENDO"; 
     let tempoInicioOrion = 0;
 
-    // VARIÁVEIS DE ESTADO DA CINEMÁTICA FINAL DE POUSO
+    // Cinemática Final
     let subEstadoCinematica = "PILOTO_AUTOMATICO"; 
     let tempoInicioCinematica = 0;
-    let escalaBaseEspacial = 0.05; 
+    let scalaBaseEspacial = 0.01; 
+    let baseEspacialX = 0;
+    let baseEspacialY = 0;
     let opacidadeFade = 0;
     let textoCompletoMensagem = "Parabéns, Comandante Mauro, pela gloriosa vitória sobre as forças do Coronavírus e do Dengozão! O quadrante está seguro graças a você. Agora, junte-se a nós na Sala de Comando... Vamos decidir a próxima estratégia de defesa!";
     let caracteresVisiveisTexto = 0;
     let tempoUltimoCaractereMina = 0;
 
-    // VARIÁVEIS DO COMBO DO MÍSSIL ESPECIAL
+    // Combo Míssil
     let sequenciaComando = [];
     let tempoUltimoCliqueCombo = 0;
     let qtdMisseis = 0;
     const m_tiros_especiais = []; 
 
-    // NAVE TURBINADA PARA TAMANHO 65
+    // Configuração do Jogador
     const x_jogador = { 
-        x: 0, y: 0, largura: 65, altura: 65, velocidad: 7,
+        x: 0, y: 0, largura: 65, altura: 67, velocidad: 7,
         movendoEsquerda: false, movendoDireita: false, movendoCima: false, movendoBaixo: false,
         vidaMax: 10, vida: 10, tipoTiro: "NORMAL",
         escala: 1, emSucao: false, buracoSugador: null, anguloMorte: 0
@@ -172,7 +488,6 @@
     const powerups = []; 
     const buracosNegros = []; 
 
-    // Lista de Gerenciamento da Fase 4
     const asteroides = [];
     let ultimoAsteroideCriado = 0;
     const META_FIM_ASTEROIDES = 25; 
@@ -182,32 +497,33 @@
     let intervaloInimigos = 1400; 
     let ultimoDropBonusMagnetico = 0; 
 
-    // Chefão da Fase 1
     const chefao = {
-        x: 0, y: -120, largura: 130, altura: 100, velX: 3.5, velY: 1.5,
+        x: 0, y: -120, largura: 130, height: 100, velX: 3.5, velY: 1.5,
         vidaMax: 30, vida: 30, ultTiro: 0
     };
 
-    // Chefão Dengosão (Fase 3)
     const dengosao = {
         x: 0, y: -150, largura: 160, altura: 120, velX: 4.5, velY: 1.2,
-        vidaMax: 60, vida: 60, ultTiroBola: 0, ultTiroFerrao: 0, ativo: false, morrendo: false, tempoMorte: 0
+        vidaMax: 60, vida: 60, ultTiroBola: 0, ultTiroFerrao: 0, 
+        ativo: false, morrendo: false, tempoMorte: 0
     };
 
-    // BOTÕES CONFIGURADOS DE FÁBRICA COM TAMANHO 90
+    // Painel de Botões da Sala de Comando
     const painel = {
         y: 0, altura: 150,
-        btnEsq: { x: 15, y: 0, l: 90, a: 90 },
-        btnDir: { x: 115, y: 0, l: 90, a: 90 },
-        btnCima: { x: 65, y: 0, l: 90, a: 90 },
-        btnBaixo: { x: 65, y: 0, l: 90, a: 90 },
+        btnEsq: { x: 15, y: 0, l: 50, a: 50 },
+        btnDir: { x: 115, y: 0, l: 50, a: 50 },
+        btnCima: { x: 65, y: 0, l: 50, a: 50 },
+        btnBaixo: { x: 65, y: 0, l: 50, a: 50 },
         btnAtirar: { x: 0, y: 0, raio: 40 },
         btnIniciar: { x: 0, y: 0, l: 180, a: 50 },
-        btnRota1: { x: 0, y: 0, l: 140, a: 45 },
-        btnRota2: { x: 0, y: 0, l: 140, a: 45 }
+        
+        btnOrion: { x: 0, y: 0, l: 110, a: 45 },
+        btnPegasus: { x: 0, y: 0, l: 110, a: 45 },
+        btnAlfaCentauri: { x: 0, y: 0, l: 110, a: 45 }
     };
 
-    function configurarPainel() {
+    function configuringPainel() {
         painel.y = canvas.height - painel.altura;
         cenario.y2 = -canvas.height;
         painel.btnCima.y = painel.y + 10;
@@ -219,12 +535,25 @@
         painel.btnIniciar.x = canvas.width / 2 - painel.btnIniciar.l / 2;
         painel.btnIniciar.y = canvas.height / 2 + 60;
 
-        painel.btnRota1.x = canvas.width / 2 - 150;
-        painel.btnRota1.y = canvas.height - 80;
-        painel.btnRota2.x = canvas.width / 2 + 10;
-        painel.btnRota2.y = canvas.height - 80;
+        let espacamentoInter = 12;
+        let larguraTotalBotoes = (painel.btnOrion.l * 3) + (espacamentoInter * 2);
+        let margemEsquerdaInicial = (canvas.width - larguraTotalBotoes) / 2;
+
+        painel.btnOrion.x = margemEsquerdaInicial;
+        painel.btnOrion.y = canvas.height - 80;
+
+        painel.btnPegasus.x = painel.btnOrion.x + painel.btnOrion.l + espacamentoInter;
+        painel.btnPegasus.y = canvas.height - 80;
+
+        painel.btnAlfaCentauri.x = painel.btnPegasus.x + painel.btnPegasus.l + espacamentoInter;
+        painel.btnAlfaCentauri.y = canvas.height - 80;
 
         estrelasFundo.forEach(est => est.x = Math.random() * canvas.width);
+
+        estrelasEspeciais.forEach(est => {
+            est.x = Math.random() * canvas.width;
+            est.y = Math.random() * (canvas.height * 0.40); 
+        });
 
         if (x_jogador.x === 0 || x_jogador.y === 0) {
             x_jogador.x = canvas.width / 2 - x_jogador.largura / 2;
@@ -241,14 +570,16 @@
             canvas.width = larguraJanela;
             canvas.height = larguraJanela * (16 / 9);
         }
-        configurarPainel();
+        configuringPainel();
     }
 
     function reiniciarJogo() {
         registrarNovaPartida(); 
+        try { somCombate.play().catch(() => {}); } catch(e) {}
 
         pontuacao = 0; abates = 0; faseAtual = 1; countAsteroidesProcessados = 0;
         bossAtivo = false; bossMorrendo = false; tremorCena = 0;
+        inimigosAbatidosContador = 0; moedasEspeciais.length = 0;
         dengosao.ativo = false; dengosao.morrendo = false; dengosao.vida = dengosao.vidaMax; dengosao.y = -150;
         x_jogador.vida = x_jogador.vidaMax; x_jogador.tipoTiro = "NORMAL";
         x_jogador.escala = 1; x_jogador.emSucao = false; x_jogador.buracoSugador = null; x_jogador.anguloMorte = 0;
@@ -257,6 +588,7 @@
         m_tiros_especiais.length = 0;
         chefao.vida = chefao.vidaMax; chefao.y = -120;
         cenario.velocidade = 3.5;
+        
         x_jogador.x = canvas.width / 2 - x_jogador.largura / 2;
         x_jogador.y = painel.y - x_jogador.altura - 30;
         
@@ -265,16 +597,22 @@
 
         estadoJogo = "CINEMATICA_ORION";
         subEstadoOrion = "COCKPIT_DIMINUINDO";
-        escalaCockpitOrion = 1.0;
-        escalaNaveOrion = 4.0;
+        escalaCockpitOrion = 3.5; 
+        escalaNaveOrion = 10.0;   
+        opacidadeTransicaoOrion = 0;
+        faseLuzOrion = "ESCURECENDO";
         tempoInicioOrion = performance.now();
 
         subEstadoCinematica = "PILOTO_AUTOMATICO";
-        escalaBaseEspacial = 0.05;
+        scalaBaseEspacial = 0.005;
         opacidadeFade = 0;
         caracteresVisiveisTexto = 0;
+        planetaCinematica.ativo = false;
 
         if (audioSucao) { audioSucao.pause(); audioSucao.currentTime = 0; }
+        if (window.MochilaModulo && typeof window.MochilaModulo.reset === "function") {
+            window.MochilaModulo.reset();
+        }
     }
 
     function iniciarFase2() {
@@ -310,6 +648,17 @@
         x_jogador.movendoEsquerda = false; x_jogador.movendoDireita = false;
         x_jogador.movendoCima = false; x_jogador.movendoBaixo = false;
         tiros.length = 0; bolasMalditas.length = 0; asteroides.length = 0; m_tiros_especiais.length = 0;
+        
+        planetaCinematica.inicialX = canvas.width / 2;
+        planetaCinematica.inicialY = (canvas.height * 0.45) / 2;
+        planetaCinematica.x = planetaCinematica.inicialX;
+        planetaCinematica.y = planetaCinematica.inicialY;
+        planetaCinematica.raio = 2; 
+        planetaCinematica.ativo = true;
+
+        scalaBaseEspacial = 0.005;
+        baseEspacialX = canvas.width / 2;
+        baseEspacialY = (canvas.height * 0.45) / 2;
     }
 
     function verificarColisao(a, b) {
@@ -350,27 +699,36 @@
 
     function dispararMissil() {
         m_tiros_especiais.push({
-            x: x_jogador.x + x_jogador.largura / 2 - 15,
-            y: x_jogador.y - 45,
-            largura: 30,
-            altura: 50,
-            vel: 10
+            x: x_jogador.x + x_jogador.largura / 2 - 20, 
+            y: x_jogador.y - 145,
+            largura: 40,
+            altura: 100,
+            vel: 8
         });
         tocarSomMissil();
     }
 
     // --- CONTROLES TECLADO ---
     window.addEventListener("keydown", e => {
+        if (e.key === "o" || e.key === "O") {
+            if (typeof iniciarMissaoOrion === 'function') {
+                try { somCombate.pause(); somSuspense.play().catch(() => {}); } catch(err){}
+                iniciarMissaoOrion();
+                return;
+            }
+        }
+
         if (estadoJogo === "START" && (e.key === " " || e.key === "Enter")) { reiniciarJogo(); return; }
         if (estadoJogo === "GAMEOVER" && (e.key === " " || e.key === "Enter")) { estadoJogo = "START"; return; }
         
         if (estadoJogo === "CINEMATICA_FINAL" && subEstadoCinematica === "SALA_CONTROLE") {
-            if (e.key === "1") { estadoJogo = "START"; }
-            if (e.key === "2") { alert("A v1.5 está chegando! Próximas missões em desenvolvimento."); }
+            if (e.key === "1") { if (typeof iniciarMissaoOrion === 'function') { try { somCombate.pause(); somSuspense.play().catch(() => {}); } catch(err){} iniciarMissaoOrion(); } }
+            if (e.key === "2") { if (typeof iniciarMissaoPegasus === 'function') iniciarMissaoPegasus(); }
+            if (e.key === "3") { if (typeof iniciarMissaoAlfaCentauri === 'function') iniciarMissaoAlfaCentauri(); }
             return;
         }
 
-        if (estadoJogo !== "JOGANDO" || x_jogador.emSucao) return;
+        if ((estadoJogo !== "JOGANDO" && estadoJogo !== "FASE_ORION") || x_jogador.emSucao) return;
 
         if (e.key === "ArrowLeft" || e.key === "a") x_jogador.movendoEsquerda = true;
         if (e.key === "ArrowRight" || e.key === "d") x_jogador.movendoDireita = true;
@@ -394,7 +752,7 @@
     });
 
     function processarToques(e) {
-        if (estadoJogo !== "JOGANDO" || x_jogador.emSucao) return;
+        if ((estadoJogo !== "JOGANDO" && estadoJogo !== "FASE_ORION") || x_jogador.emSucao) return;
         e.preventDefault();
         x_jogador.movendoEsquerda = false; x_jogador.movendoDireita = false;
         x_jogador.movendoCima = false; x_jogador.movendoBaixo = false;
@@ -423,11 +781,17 @@
         if (estadoJogo === "GAMEOVER") { estadoJogo = "START"; return; }
 
         if (estadoJogo === "CINEMATICA_FINAL" && subEstadoCinematica === "SALA_CONTROLE") {
-            if (tx >= painel.btnRota1.x && tx <= painel.btnRota1.x + painel.btnRota1.l && ty >= painel.btnRota1.y && ty <= painel.btnRota1.y + painel.btnRota1.a) {
-                estadoJogo = "START";
+            if (tx >= painel.btnOrion.x && tx <= painel.btnOrion.x + painel.btnOrion.l && ty >= painel.btnOrion.y && ty <= painel.btnOrion.y + painel.btnOrion.a) {
+                if (typeof iniciarMissaoOrion === 'function') { 
+                    try { somCombate.pause(); somSuspense.play().catch(() => {}); } catch(err){}
+                    iniciarMissaoOrion(); 
+                }
             }
-            if (tx >= painel.btnRota2.x && tx <= painel.btnRota2.x + painel.btnRota2.l && ty >= painel.btnRota2.y && ty <= painel.btnRota2.y + painel.btnRota2.a) {
-                alert("A v1.5 está chegando! Próximas missões em desenvolvimento.");
+            if (tx >= painel.btnPegasus.x && tx <= painel.btnPegasus.x + painel.btnPegasus.l && ty >= painel.btnPegasus.y && ty <= painel.btnPegasus.y + painel.btnPegasus.a) {
+                if (typeof iniciarMissaoPegasus === 'function') iniciarMissaoPegasus();
+            }
+            if (tx >= painel.btnAlfaCentauri.x && tx <= painel.btnAlfaCentauri.x + painel.btnAlfaCentauri.l && ty >= painel.btnAlfaCentauri.y && ty <= painel.btnAlfaCentauri.y + painel.btnAlfaCentauri.a) {
+                if (typeof iniciarMissaoAlfaCentauri === 'function') iniciarMissaoAlfaCentauri();
             }
             return;
         }
@@ -451,7 +815,7 @@
     canvas.addEventListener("touchend", processarToques, { passive: false });
 
     function atirar() {
-        if (estadoJogo !== "JOGANDO" || x_jogador.emSucao) return;
+        if ((estadoJogo !== "JOGANDO" && estadoJogo !== "FASE_ORION") || x_jogador.emSucao) return;
         if (x_jogador.tipoTiro === "DUPLO") {
             tiros.push({ x: x_jogador.x + 5, y: x_jogador.y - 25, largura: 10, altura: 25, vel: 13 });
             tiros.push({ x: x_jogador.x + x_jogador.largura - 15, y: x_jogador.y - 25, largura: 10, altura: 25, vel: 13 });
@@ -461,23 +825,47 @@
         tocarSomTiro();
     }
 
-    // --- MÁQUINA DE LÓGICA E PROCESSAMENTO DE TRILHAS ---
+   // --- LÓGICA DO JOGO ---
     function atualizar(ts) {
-        
+        if (estadoJogo === "FASE_ORION") {
+            if (typeof atualizarFaseOrion === "function") {
+                atualizarFaseOrion();
+            }
+            return;
+        }
+
         if (estadoJogo === "CINEMATICA_ORION") {
             estrelasFundo.forEach(est => {
-                est.y += est.vel * 0.5;
+                est.y += est.vel * 4; 
                 if(est.y > canvas.height) { est.y = -10; est.x = Math.random() * canvas.width; }
             });
 
             if (subEstadoOrion === "COCKPIT_DIMINUINDO") {
-                escalaCockpitOrion -= 0.008; 
-                if (escalaCockpitOrion <= 0) {
-                    escalaCockpitOrion = 0;
-                    subEstadoOrion = "NAVE_DIMINUINDO";
+                escalaCockpitOrion -= 0.02; 
+                if (escalaCockpitOrion <= 1.0) {
+                    escalaCockpitOrion = 1.0;
+                    subEstadoOrion = "TRANSIÇÃO_LUZ";
                 }
-            } else if (subEstadoOrion === "NAVE_DIMINUINDO") {
-                escalaNaveOrion -= 0.05; 
+            } 
+            else if (subEstadoOrion === "TRANSIÇÃO_LUZ") {
+                if (faseLuzOrion === "ESCURECENDO") {
+                    opacidadeTransicaoOrion += 0.05; 
+                    if (opacidadeTransicaoOrion >= 1.0) {
+                        opacidadeTransicaoOrion = 1.0;
+                        faseLuzOrion = "CLAREANDO";
+                        subEstadoOrion = "NAVE_DIMINUINDO";
+                    }
+                }
+            } 
+            else if (subEstadoOrion === "NAVE_DIMINUINDO") {
+                if (faseLuzOrion === "CLAREANDO") {
+                    opacidadeTransicaoOrion -= 0.04; 
+                    if (opacidadeTransicaoOrion <= 0) {
+                        opacidadeTransicaoOrion = 0;
+                        faseLuzOrion = "FINALIZADO";
+                    }
+                }
+                escalaNaveOrion -= 0.07; 
                 if (escalaNaveOrion <= 1.0) {
                     escalaNaveOrion = 1.0;
                     estadoJogo = "JOGANDO"; 
@@ -487,36 +875,71 @@
         }
 
         if (estadoJogo === "CINEMATICA_FINAL") {
-            estrelasFundo.forEach(est => {
-                est.y += est.vel * 0.3;
-                if(est.y > canvas.height) { est.y = -10; est.x = Math.random() * canvas.width; }
+            estrelasEspeciais.forEach(est => {
+                est.brilho += est.fator;
+                if(est.brilho > 1 || est.brilho < 0.2) est.fator *= -1;
             });
 
+            let tempoDecorrido = ts - tempoInicioCinematica;
+
             if (subEstadoCinematica === "PILOTO_AUTOMATICO") {
+                estrelasFundo.forEach(est => {
+                    est.y += est.vel * 6;
+                    if(est.y > canvas.height) { est.y = -10; est.x = Math.random() * canvas.width; }
+                });
+
                 let centroAlinhadoX = canvas.width / 2 - x_jogador.largura / 2;
                 x_jogador.x += (centroAlinhadoX - x_jogador.x) * 0.05;
-                x_jogador.y -= 2.2; 
+                x_jogador.y -= 3.5; 
+                x_jogador.escala += 0.04; 
 
-                if (x_jogador.y + x_jogador.altura < 0) {
-                    subEstadoCinematica = "VISAO_COCKPIT";
-                    escalaBaseEspacial = 0.05; 
-                    tempoInicioCinematica = ts;
+                if (x_jogador.y + (x_jogador.altura * x_jogador.escala) < 0) {
+                    subEstadoCinematica = "PERCURSO_GLAMOUROSO";
+                    tempoInicioCinematica = ts; 
                 }
             } 
-            else if (subEstadoCinematica === "VISAO_COCKPIT") {
-                if (escalaBaseEspacial < 1.0) {
-                    escalaBaseEspacial += 0.0025; 
+            else if (subEstadoCinematica === "PERCURSO_GLAMOUROSO") {
+                estrelasFundo.forEach(est => {
+                    est.y += est.vel * 0.4;
+                    if(est.y > canvas.height) { est.y = -10; est.x = Math.random() * canvas.width; }
+                });
+
+                let pct = Math.min(1, tempoDecorrido / 18000);
+
+                if (planetaCinematica.ativo) {
+                    planetaCinematica.raio = 2 + (pct * 260); 
+                    
+                    let destinoPlanetaX = canvas.width + planetaCinematica.raio + 40;
+                    let destinoPlanetaY = (canvas.height * 0.45) * 0.7; 
+                    
+                    planetaCinematica.x = planetaCinematica.inicialX + (destinoPlanetaX - planetaCinematica.inicialX) * Math.pow(pct, 1.5);
+                    planetaCinematica.y = planetaCinematica.inicialY + (destinoPlanetaY - planetaCinematica.inicialY) * pct;
+
+                    if (planetaCinematica.x - planetaCinematica.raio > canvas.width) {
+                        planetaCinematica.ativo = false;
+                    }
+                }
+
+                if (pct < 0.92) {
+                    scalaBaseEspacial = 0.005 + Math.pow(pct, 3.2) * 0.995;
+                    baseEspacialX = canvas.width / 2;
+                    baseEspacialY = (canvas.height * 0.45) / 2 + (pct * 40); 
                 } else {
+                    scalaBaseEspacial = 1.0;
+                    baseEspacialX = canvas.width / 2;
+                    baseEspacialY = (canvas.height * 0.45) / 2 + 40;
+                }
+
+                if (tempoDecorrido >= 18000) {
                     subEstadoCinematica = "FADE_OUT";
                     tempoInicioCinematica = ts;
                     opacidadeFade = 0;
                 }
-            } 
+            }
             else if (subEstadoCinematica === "FADE_OUT") {
-                opacidadeFade += 0.02; 
+                opacidadeFade += 0.025; 
                 if (opacidadeFade >= 1.0) {
                     opacidadeFade = 1.0;
-                    // FIX: Direciona para o FADE_IN em vez de pular direto para a sala congelada
                     subEstadoCinematica = "FADE_IN";
                     tempoInicioCinematica = ts;
                     caracteresVisiveisTexto = 0;
@@ -524,7 +947,7 @@
                 }
             } 
             else if (subEstadoCinematica === "FADE_IN") {
-                opacidadeFade -= 0.02; 
+                opacidadeFade -= 0.025; 
                 if (opacidadeFade <= 0) {
                     opacidadeFade = 0;
                     subEstadoCinematica = "SALA_CONTROLE";
@@ -582,11 +1005,27 @@
         if (x_jogador.movendoCima && x_jogador.y > 0) x_jogador.y -= x_jogador.velocidad;
         if (x_jogador.movendoBaixo && x_jogador.y < painel.y - x_jogador.altura) x_jogador.y += x_jogador.velocidad;
 
+        for (let i = moedasEspeciais.length - 1; i >= 0; i--) {
+            let moeda = moedasEspeciais[i];
+            moeda.y += moeda.velQueda;
+
+            if (verificarColisao(moeda, x_jogador)) {
+                if (typeof window.MochilaIntercambio.forçarGatilho === "function") {
+                    window.MochilaIntercambio.forçarGatilho();
+                }
+                moedasEspeciais.splice(i, 1);
+                continue;
+            }
+            if (moeda.y > painel.y) {
+                moedasEspeciais.splice(i, 1);
+            }
+        }
+
         for (let i = m_tiros_especiais.length - 1; i >= 0; i--) {
             let m = m_tiros_especiais[i];
             m.y -= m.vel;
 
-            if (faseAtual === 1 && bossAtivo && verificarColisao(m, {x: chefao.x, y: chefao.y, largura: chefao.largura, altura: chefao.altura}) && chefao.y > 0) {
+            if (faseAtual === 1 && bossAtivo && verificarColisao(m, {x: chefao.x, y: chefao.y, largura: chefao.largura, altura: chefao.height}) && chefao.y > 0) {
                 instanciarExplosao(m.x, m.y, 60, 60);
                 chefao.vida -= chefao.vidaMax * 0.5; 
                 pontuacao += 1000;
@@ -632,7 +1071,7 @@
         for (let i = tiros.length - 1; i >= 0; i--) {
             tiros[i].y -= tiros[i].vel;
             
-            if (faseAtual === 1 && bossAtivo && verificarColisao(tiros[i], {x: chefao.x, y: chefao.y, largura: chefao.largura, altura: chefao.altura}) && chefao.y > 0) {
+            if (faseAtual === 1 && bossAtivo && verificarColisao(tiros[i], {x: chefao.x, y: chefao.y, largura: chefao.largura, altura: chefao.height}) && chefao.y > 0) {
                 instanciarExplosao(tiros[i].x, tiros[i].y, 20, 20); tiros.splice(i, 1); chefao.vida--; pontuacao += 50;
                 if (chefao.vida <= 0) {
                     bossAtivo = false; bossMorrendo = true; tempoMorteBoss = ts; pontuacao += 5000; tocarSomExplosaoBoss(); 
@@ -647,7 +1086,6 @@
                 }
                 continue;
             }
-
             if (faseAtual === 4) {
                 let tiroDestruido = false;
                 for (let aIdx = asteroides.length - 1; aIdx >= 0; aIdx--) {
@@ -681,30 +1119,23 @@
 
         if (ts - ultimoInimigoCriado > delayCriacao && faseAtual <= 2) {
             if (faseAtual === 1 && !bossAtivo && !bossMorrendo) {
-                batedores.push({ tipo: 1, x: Math.random() * (canvas.width - 55), y: -55, largura: 55, altura: 55, velY: 3.5, ultTiro: ts });
+                batedores.push({ tipo: 1, x: Math.random() * (canvas.width - 45), y: -45, largura: 45, altura: 45, velY: 3.5, ultTiro: ts });
                 ultimoInimigoCriado = ts;
             } 
             else if (faseAtual === 2) {
                 batedores.push({ 
-                    tipo: 2, x: Math.random() * (canvas.width - 60), y: -60, largura: 60, altura: 60, velY: 4.2, 
+                    tipo: 2, x: Math.random() * (canvas.width - 50), y: -50, largura: 50, altura: 50, velY: 4.2, 
                     ultTiro: ts, anguloGiro: Math.random() * 5, larguraZiguezague: 6
                 });
                 ultimoInimigoCriado = ts;
             }
         }
-
         if (faseAtual === 2 && ts - ultimoDropBonusMagnetico > 5000) {
             powerups.push({
-                x: Math.random() * (canvas.width - 30) + 15,
-                y: -30,
-                largura: 25,
-                altura: 25,
-                vel: 3.0,
-                tipo: "MISSIAL_AMARELO"
+                x: Math.random() * (canvas.width - 30) + 15, y: -30, largura: 25, altura: 25, vel: 3.0, tipo: "MISSIAL_AMARELO"
             });
             ultimoDropBonusMagnetico = ts;
         }
-
         if (faseAtual === 4 && ts - ultimoAsteroideCriado > 1100 && countAsteroidesProcessados < META_FIM_ASTEROIDES) {
             let dadosSorteio = Math.random();
             let nomeTipo = "asteroide_1";
@@ -717,15 +1148,9 @@
             }
 
             asteroides.push({
-                tipo: nomeTipo,
-                x: Math.random() * (canvas.width - tam - 20) + 10,
-                y: -tam - 10,
-                largura: tam,
-                altura: tam,
-                vida: rVida,
-                velY: velQueda,
-                angulo: Math.random() * Math.PI,
-                velRotacao: (Math.random() - 0.5) * 0.06
+                tipo: nomeTipo, x: Math.random() * (canvas.width - tam - 20) + 10, y: -tam - 10,
+                largura: tam, altura: tam, vida: rVida, velY: velQueda,
+                angulo: Math.random() * Math.PI, velRotacao: (Math.random() - 0.5) * 0.06
             });
             ultimoAsteroideCriado = ts;
         }
@@ -747,6 +1172,19 @@
             for (let j = tiros.length - 1; j >= 0; j--) {
                 if (verificarColisao(tiros[j], b)) {
                     instanciarExplosao(b.x, b.y, b.largura, b.altura); tentarDropPowerup(b.x, b.y);
+                    
+                    inimigosAbatidosContador++;
+                    if (inimigosAbatidosContador >= 10) {
+                        inimigosAbatidosContador = 0;
+                        moedasEspeciais.push({
+                            x: b.x + b.largura / 2 - 10,
+                            y: b.y,
+                            largura: 20,
+                            altura: 20,
+                            velQueda: 2.8
+                        });
+                    }
+
                     batedores.splice(i, 1); tiros.splice(j, 1); abates++; 
                     pontuacao += b.tipo === 2 ? 300 : 150;
 
@@ -758,7 +1196,6 @@
             }
             if (b && b.y > painel.y) batedores.splice(i, 1);
         }
-
         if (faseAtual === 1) {
             if (bossMorrendo) {
                 if (Math.random() < 0.25) { instanciarExplosao(chefao.x + Math.random()*chefao.largura, chefao.y + Math.random()*100, 30, 30); }
@@ -769,8 +1206,8 @@
                 if (chefao.y < 60) chefao.y += chefao.velY;
                 else { chefao.x += chefao.velX; if (chefao.x <= 10 || chefao.x >= canvas.width - chefao.largura - 10) chefao.velX *= -1; }
                 if (ts - chefao.ultTiro > 850 && chefao.y > 0) {
-                    bolasMalditas.push({ x: chefao.x + 20, y: chefao.y + chefao.altura, largura: 16, altura: 16, vel: 6.5 });
-                    bolasMalditas.push({ x: chefao.x + chefao.largura - 36, y: chefao.y + chefao.altura, largura: 16, altura: 16, vel: 6.5 });
+                    bolasMalditas.push({ x: chefao.x + 20, y: chefao.y + chefao.height, largura: 16, altura: 16, vel: 6.5 });
+                    bolasMalditas.push({ x: chefao.x + chefao.largura - 36, y: chefao.y + chefao.height, largura: 16, altura: 16, vel: 6.5 });
                     chefao.ultTiro = ts;
                 }
             }
@@ -779,17 +1216,13 @@
         if (faseAtual === 3) {
             if (dengosao.morrendo) {
                 if (Math.random() < 0.30) { instanciarExplosao(dengosao.x + Math.random()*dengosao.largura, dengosao.y + Math.random()*dengosao.altura, 35, 35); }
-                if (ts - dengosao.tempoMorte > 3500) { 
-                    dengosao.morrendo = false; 
-                    estadoJogo = "TRANSICAO"; 
-                    tempoTransicao = ts;
-                }
+                if (ts - dengosao.tempoMorte > 3500) { dengosao.morrendo = false; estadoJogo = "TRANSICAO"; tempoTransicao = ts; }
                 return;
             }
 
             if (dengosao.ativo) {
                 if (dengosao.y < 70) { dengosao.y += dengosao.velY; } 
-                else { chefao.x = 0; dengosao.x += dengosao.velX; if (dengosao.x <= 10 || dengosao.x >= canvas.width - dengosao.largura - 10) dengosao.velX *= -1; }
+                else { dengosao.x += dengosao.velX; if (dengosao.x <= 10 || dengosao.x >= canvas.width - dengosao.largura - 10) dengosao.velX *= -1; }
 
                 if (ts - dengosao.ultTiroBola > 700 && dengosao.y > 0) {
                     bolasMalditas.push({ x: dengosao.x + 15, y: dengosao.y + dengosao.altura, largura: 16, altura: 16, vel: 7.0 });
@@ -813,17 +1246,11 @@
                 if (verificarColisao(ast, x_jogador)) {
                     instanciarExplosao(ast.x, ast.y, ast.largura, ast.altura);
                     asteroides.splice(i, 1);
-                    x_jogador.vida = 0; 
-                    estadoJogo = "GAMEOVER";
+                    x_jogador.vida = 0; estadoJogo = "GAMEOVER";
                     continue;
                 }
-
-                if (ast.y > painel.y) {
-                    asteroides.splice(i, 1);
-                    countAsteroidesProcessados++;
-                }
+                if (ast.y > painel.y) { asteroides.splice(i, 1); countAsteroidesProcessados++; }
             }
-
             if (countAsteroidesProcessados >= META_FIM_ASTEROIDES && asteroides.length === 0) {
                 iniciarSequenciaEstacaoEspacial(ts);
             }
@@ -852,9 +1279,10 @@
         }
 
         if (faseAtual === 2) {
-            let todosPassaram = true;
+            let todosPassaram = buracosNegros.length > 0;
             for (let i = buracosNegros.length - 1; i >= 0; i--) {
-                let bn = buracosNegros[i]; bn.y += bn.velocidadeCair;
+                let bn = buracosNegros[i]; bn.y += bn.velocidadCair;
+
                 if (bn.y < painel.y + 100) todosPassaram = false;
 
                 let centroNaveX = x_jogador.x + x_jogador.largura / 2;
@@ -869,12 +1297,7 @@
                     if (centroNaveY < bn.y) x_jogador.y += 1.4; else x_jogador.y -= 1.4;
                 }
             }
-            
-            if (todosPassaram && buracosNegros.length > 0 && !x_jogador.emSucao) {
-                estadoJogo = "TRANSICAO"; 
-                tempoTransition = ts; 
-                tempoTransicao = ts;
-            }
+            if (todosPassaram && !x_jogador.emSucao) { estadoJogo = "TRANSICAO"; tempoTransicao = ts; }
         }
 
         for (let i = powerups.length - 1; i >= 0; i--) {
@@ -882,11 +1305,7 @@
             if (verificarColisao(powerups[i], x_jogador)) {
                 if (powerups[i].tipo === "TIRO_DUPLO") x_jogador.tipoTiro = "DUPLO";
                 if (powerups[i].tipo === "VIDA") x_jogador.vida = Math.min(x_jogador.vidaMax, x_jogador.vida + 3);
-                
-                if (powerups[i].tipo === "MISSIAL_AMARELO") {
-                    qtdMisseis++;
-                }
-
+                if (powerups[i].tipo === "MISSIAL_AMARELO") qtdMisseis++;
                 powerups.splice(i, 1); continue;
             }
             if (powerups[i] && powerups[i].y > painel.y) powerups.splice(i, 1);
@@ -895,23 +1314,50 @@
         for (let i = explosoes.length - 1; i >= 0; i--) {
             explosoes[i].vida--; if (explosoes[i].vida <= 0) explosoes.splice(i, 1);
         }
+
+        if (window.MochilaModulo && typeof window.MochilaModulo.update === "function") {
+            window.MochilaModulo.update();
+        }
     }
 
-    // --- ENGINE GRÁFICA COMPLETA E RENDERIZADOR ---
+    // --- RENDERIZAÇÃO ---
+    function escreverTextoBlocoQuebrado(contexto, texto, x, y, larguraMaxima, linhaAltura) {
+        if (!texto) return; 
+        
+        let palavras = texto.split(' ');
+        let linha = '';
+
+        for(let n = 0; n < palavras.length; n++) {
+            let testLinha = linha + palavras[n] + ' ';
+            let metricas = contexto.measureText(testLinha);
+            let testLargura = metricas.width;
+            
+            if (testLargura > larguraMaxima && n > 0) {
+                contexto.fillText(linha, x, y);
+                linha = palavras[n] + ' ';
+                y += linhaAltura;
+            } else {
+                linha = testLinha;
+            }
+        }
+        contexto.fillText(linha, x, y);
+    }
+	
     function desenhar() {
+        if (estadoJogo === "FASE_ORION") {
+            if (typeof desenharOrion === "function") {
+                desenharOrion(ctx);
+            }
+            return;
+        }
+
         ctx.save();
         if (tremorCena > 0 && estadoJogo === "JOGANDO") {
             ctx.translate((Math.random() - 0.5) * tremorCena, (Math.random() - 0.5) * tremorCena);
         }
 
         ctx.fillStyle = "#090912"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        if (imgFundo.complete && imgFundo.width > 0) {
-            ctx.drawImage(imgFundo, 0, cenario.y1, canvas.width, canvas.height);
-            ctx.drawImage(imgFundo, 0, cenario.y2, canvas.width, canvas.height);
-        } else {
-            ctx.fillStyle = "#ffffff"; estrelasFundo.forEach(est => { ctx.fillRect(est.x, est.y, est.tamanho, est.tamanho); });
-        }
+        ctx.fillStyle = "#ffffff"; estrelasFundo.forEach(est => { ctx.fillRect(est.x, est.y, est.tamanho, est.tamanho); });
 
         if (faseAtual === 2 && (estadoJogo === "JOGANDO" || estadoJogo === "TRANSICAO")) {
             buracosNegros.forEach(bn => {
@@ -930,7 +1376,7 @@
                 if (p.tipo === "MISSIAL_AMARELO") {
                     ctx.fillStyle = "#FFFF00"; ctx.beginPath(); ctx.arc(p.x + 12, p.y + 12, 12, 0, Math.PI*2); ctx.fill();
                     ctx.strokeStyle = "#FF4500"; ctx.lineWidth = 3; ctx.stroke();
-                    ctx.fillStyle = "#000"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#00FFFF"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
                     ctx.fillText("M", p.x + 12, p.y + 12);
                 } else {
                     ctx.fillStyle = p.tipo === "TIRO_DUPLO" ? "#00d2ff" : "#00ff66"; ctx.beginPath(); ctx.arc(p.x + 12, p.y + 12, 11, 0, Math.PI*2); ctx.fill();
@@ -946,23 +1392,34 @@
 
             m_tiros_especiais.forEach(m => {
                 if (imgMissil.complete && imgMissil.width > 0) {
-                    // FIX: m.height corrigido para m.altura
                     ctx.drawImage(imgMissil, m.x, m.y, m.largura, m.altura);
                 } else {
-                    ctx.fillStyle = "#FF3300";
-                    ctx.fillRect(m.x, m.y + 15, m.largura, m.altura - 15);
-                    ctx.fillStyle = "#FFCC00";
-                    ctx.beginPath();
-                    ctx.moveTo(m.x, m.y + 15);
-                    ctx.lineTo(m.x + m.largura / 2, m.y);
-                    ctx.lineTo(m.x + m.largura, m.y + 15);
-                    ctx.fill();
+                    ctx.fillStyle = "#FF3300"; ctx.fillRect(m.x, m.y + 15, m.largura, m.altura - 15);
+                    ctx.fillStyle = "#FFCC00"; ctx.beginPath();
+                    ctx.moveTo(m.x, m.y + 15); ctx.lineTo(m.x + m.largura / 2, m.y); ctx.lineTo(m.x + m.largura, m.y + 15); ctx.fill();
                 }
             });
 
+           moedasEspeciais.forEach((m, i) => { // <--- Adicionamos o ', i' aqui para mapear a posição da moeda
+    // 1. DESENHA A MOEDA NA TELA (Seu código original)
+    ctx.beginPath();
+    ctx.arc(m.x + m.largura/2, m.y + m.altura/2, m.largura/2, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFD700"; 
+    ctx.fill();
+    ctx.lineWidth = 1.5; 
+    ctx.strokeStyle = "#FFFFFF"; 
+    ctx.stroke();
+    ctx.closePath();
+
+    // 2. LOGICA DE COLISÃO E COLETA (Onde a mágica acontece)
+    // Verifica se a nave (x_jogador) colidiu com a moeda atual (m)
+    if (verificarColisao(x_jogador, m)) { 
+        coletarMoedaDoEspaco(i); // Remove a moeda certa usando o índice 'i' e soma na carteira!
+    }
+});
             batedores.forEach(b => {
                 if (b.tipo === 2) {
-                    if (imgBatedor2.complete && imgBatedor2.width > 0) { ctx.drawImage(imgBatedor2, b.x, b.y, b.largura, b.altura); } 
+                    if (imgBatedor2.complete && imgBatedor2.width > 0) ctx.drawImage(imgBatedor2, b.x, b.y, b.largura, b.altura);
                     else { ctx.fillStyle = "#a600ff"; ctx.fillRect(b.x, b.y, b.largura, b.altura); }
                 } else {
                     if (imgBatedor.complete && imgBatedor.width > 0) ctx.drawImage(imgBatedor, b.x, b.y, b.largura, b.altura);
@@ -972,9 +1429,7 @@
 
             if (faseAtual === 4) {
                 asteroides.forEach(ast => {
-                    ctx.save();
-                    ctx.translate(ast.x + ast.largura / 2, ast.y + ast.altura / 2);
-                    ctx.rotate(ast.angulo);
+                    ctx.save(); ctx.translate(ast.x + ast.largura / 2, ast.y + ast.altura / 2); ctx.rotate(ast.angulo);
 
                     if (ast.tipo === "asteroide_1" && imgAsteroide1.complete && imgAsteroide1.width > 0) {
                         ctx.drawImage(imgAsteroide1, -ast.largura / 2, -ast.altura / 2, ast.largura, ast.altura);
@@ -997,8 +1452,8 @@
             }
 
             if (faseAtual === 1 && (bossAtivo || bossMorrendo)) {
-                if (imgChefao.complete && imgChefao.width > 0) ctx.drawImage(imgChefao, chefao.x, chefao.y, chefao.largura, chefao.altura);
-                else { ctx.fillStyle = "#7a3311"; ctx.fillRect(chefao.x, chefao.y, chefao.largura, chefao.altura); }
+                if (imgChefao.complete && imgChefao.width > 0) ctx.drawImage(imgChefao, chefao.x, chefao.y, chefao.largura, chefao.height);
+                else { ctx.fillStyle = "#7a3311"; ctx.fillRect(chefao.x, chefao.y, chefao.largura, chefao.height); }
                 if (bossAtivo) {
                     ctx.fillStyle = "rgba(0, 0, 0, 0.6)"; ctx.fillRect(canvas.width/2 - 100, 15, 200, 8);
                     ctx.fillStyle = "#ff0044"; ctx.fillRect(canvas.width/2 - 100, 15, (chefao.vida / chefao.vidaMax) * 200, 8);
@@ -1006,7 +1461,7 @@
             }
 
             if (faseAtual === 3 && (dengosao.ativo || dengosao.morrendo)) {
-                if (imgDengosao.complete && imgDengosao.width > 0) { ctx.drawImage(imgDengosao, dengosao.x, dengosao.y, dengosao.largura, dengosao.altura); } 
+                if (imgDengosao.complete && imgDengosao.width > 0) ctx.drawImage(imgDengosao, dengosao.x, dengosao.y, dengosao.largura, dengosao.altura);
                 else { ctx.fillStyle = "#2e5a1c"; ctx.fillRect(dengosao.x, dengosao.y, dengosao.largura, dengosao.altura); }
                 if (dengosao.ativo) {
                     ctx.fillStyle = "rgba(0, 0, 0, 0.6)"; ctx.fillRect(canvas.width/2 - 100, 15, 200, 8);
@@ -1020,45 +1475,47 @@
             });
 
             ferroesInimigos.forEach(fr => {
-                if (imgFerrao.complete && imgFerrao.width > 0) { ctx.drawImage(imgFerrao, fr.x, fr.y, fr.largura, fr.altura); } 
-                else { ctx.fillStyle = "#ff4500"; ctx.fillRect(fr.x, fr.y, fr.largura, fr.altura); }
+                ctx.fillStyle = "#ff4500"; ctx.fillRect(fr.x, fr.y, fr.largura, fr.altura);
             });
+        }
+
+        if (estadoJogo === "GAMEOVER") {
+            ctx.fillStyle = "rgba(15, 0, 5, 0.95)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#ff2244"; ctx.font = "bold 36px sans-serif";
+            ctx.fillText("FIM DE JOGO", canvas.width / 2, canvas.height / 2 - 40);
+            ctx.fillStyle = "#ffffff"; ctx.font = "16px sans-serif"; ctx.fillText("Placar: " + pontuacao, canvas.width / 2, canvas.height / 2 + 15);
+            
+            ctx.fillStyle = "#ffcc00"; ctx.fillRect(painel.btnIniciar.x, painel.btnIniciar.y, painel.btnIniciar.l, painel.btnIniciar.a);
+            ctx.fillStyle = "#000"; ctx.font = "bold 15px sans-serif"; ctx.fillText("JOGAR DE NOVO", canvas.width / 2, painel.btnIniciar.y + 25);
         }
 
         if (estadoJogo === "JOGANDO" || x_jogador.emSucao || (estadoJogo === "CINEMATICA_FINAL" && subEstadoCinematica === "PILOTO_AUTOMATICO")) {
             ctx.save(); let cX = x_jogador.x + x_jogador.largura / 2; let cY = x_jogador.y + x_jogador.altura / 2;
             ctx.translate(cX, cY); ctx.scale(x_jogador.escala, x_jogador.escala); ctx.rotate(x_jogador.anguloMorte); 
-            
             if (imgNave.complete && imgNave.width > 0) ctx.drawImage(imgNave, -x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura);
             else { ctx.fillStyle = "#00d2ff"; ctx.fillRect(-x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura); }
             ctx.restore();
         }
 
         if (estadoJogo === "CINEMATICA_ORION") {
-            if (subEstadoOrion === "COCKPIT_DIMINUINDO") {
-                ctx.save();
-                ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.scale(escalaCockpitOrion, escalaCockpitOrion);
-                if (imgCockpit.complete && imgCockpit.width > 0) {
-                    ctx.drawImage(imgCockpit, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-                } else {
-                    ctx.fillStyle = "rgba(0, 210, 255, 0.3)";
-                    ctx.fillRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+            if (subEstadoOrion === "COCKPIT_DIMINUINDO" || (subEstadoOrion === "TRANSIÇÃO_LUZ" && faseLuzOrion === "ESCURECENDO")) {
+                ctx.save(); ctx.translate(canvas.width / 2, canvas.height / 2); ctx.scale(escalaCockpitOrion, escalaCockpitOrion);
+                if (imgCockpit.complete && imgCockpit.width > 0) ctx.drawImage(imgCockpit, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+                else {
+                    ctx.strokeStyle = "#00ffcc"; ctx.lineWidth = 4; ctx.strokeRect(-canvas.width/4, -canvas.height/4, canvas.width/2, canvas.height/2);
+                    ctx.fillStyle = "rgba(0, 210, 255, 0.2)"; ctx.fillRect(-canvas.width/4, -canvas.height/4, canvas.width/2, canvas.height/2);
                 }
                 ctx.restore();
-            } else if (subEstadoOrion === "NAVE_DIMINUINDO") {
-                ctx.save();
-                let nX = canvas.width / 2;
-                let nY = canvas.height / 2 + 100;
-                ctx.translate(nX, nY);
-                ctx.scale(escalaNaveOrion, escalaNaveOrion);
-                if (imgNave.complete && imgNave.width > 0) {
-                    ctx.drawImage(imgNave, -x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura);
-                } else {
-                    ctx.fillStyle = "#00d2ff";
-                    ctx.fillRect(-x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura);
-                }
+            } 
+            if (subEstadoOrion === "NAVE_DIMINUINDO") {
+                ctx.save(); let posicaoFinalX = x_jogador.x + x_jogador.largura / 2; let posicaoFinalY = x_jogador.y + x_jogador.altura / 2;
+                ctx.translate(posicaoFinalX, posicaoFinalY); ctx.scale(escalaNaveOrion, escalaNaveOrion);
+                if (imgNave.complete && imgNave.width > 0) ctx.drawImage(imgNave, -x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura);
+                else { ctx.fillStyle = "#00d2ff"; ctx.fillRect(-x_jogador.largura / 2, -x_jogador.altura / 2, x_jogador.largura, x_jogador.altura); }
                 ctx.restore();
+            }
+            if (opacidadeTransicaoOrion > 0) {
+                ctx.fillStyle = "rgba(0, 0, 0, " + opacidadeTransicaoOrion + ")"; ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         }
 
@@ -1077,9 +1534,7 @@
 
             ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "left";
             ctx.fillText("SCORE: " + pontuacao, 25, 52);
-            
-            ctx.fillStyle = "#FFFF00";
-            ctx.fillText("🚀 MÍSSEIS: " + qtdMisseis, 25, 68);
+            ctx.fillStyle = "#FFFF00"; ctx.fillText("🚀 MÍSSEIS: " + qtdMisseis, 25, 68);
             
             ctx.fillStyle = "#fff"; ctx.font = "11px sans-serif";
             let subTextoFase = "Fase 1: Combate Viral";
@@ -1089,104 +1544,109 @@
             ctx.fillText(subTextoFase, 25, 84);
 
             ctx.fillStyle = "rgba(255, 255, 255, 0.22)"; ctx.font = "24px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.fillText("▲", painel.btnCima.x + 45, painel.btnCima.y + 45);
-            ctx.fillText("◀️", painel.btnEsq.x + 45, painel.btnEsq.y + 45);
-            ctx.fillText("▶️", painel.btnDir.x + 45, painel.btnDir.y + 45);
-            ctx.fillText("▼", painel.btnBaixo.x + 45, painel.btnBaixo.y + 45);
+            ctx.fillText("▲", painel.btnCima.x + 25, painel.btnCima.y + 25);
+            ctx.fillText("◀️", painel.btnEsq.x + 25, painel.btnEsq.y + 25);
+            ctx.fillText("▶️", painel.btnDir.x + 25, painel.btnDir.y + 25);
+            ctx.fillText("▼", painel.btnBaixo.x + 25, painel.btnBaixo.y + 25);
 
             ctx.fillStyle = "rgba(255, 0, 70, 0.75)"; ctx.beginPath(); ctx.arc(painel.btnAtirar.x, painel.btnAtirar.y, painel.btnAtirar.raio, 0, Math.PI*2); ctx.fill();
             ctx.strokeStyle = "rgba(255, 0, 70, 0.9)"; ctx.lineWidth = 2; ctx.stroke();
         }
 
         if (estadoJogo === "CINEMATICA_FINAL") {
-            
-            if (subEstadoCinematica === "VISAO_COCKPIT") {
-                if (imgBaseEspacial.complete && imgBaseEspacial.width > 0) {
-                    ctx.save();
-                    ctx.translate(canvas.width / 2, canvas.height / 2 - 50);
-                    ctx.scale(escalaBaseEspacial, escalaBaseEspacial);
-                    ctx.drawImage(imgBaseEspacial, -imgBaseEspacial.width / 2, -imgBaseEspacial.height / 2);
-                    ctx.restore();
-                } else {
-                    ctx.fillStyle = "#334466";
+            if (subEstadoCinematica === "PERCURSO_GLAMOUROSO" || subEstadoCinematica === "FADE_OUT") {
+                estrelasEspeciais.forEach(est => {
+                    ctx.fillStyle = "rgba(255, 255, 255, " + est.brilho + ")";
                     ctx.beginPath();
-                    ctx.arc(canvas.width / 2, canvas.height / 2 - 50, escalaBaseEspacial * 120, 0, Math.PI * 2);
+                    ctx.fillRect(est.x - 4, est.y - 1, 9, 3);
+                    ctx.fillRect(est.x - 1, est.y - 4, 3, 9);
                     ctx.fill();
+                });
+
+                if (planetaCinematica.ativo) {
+                    let gradPlaneta = ctx.createRadialGradient(
+                        planetaCinematica.x - (planetaCinematica.raio * 0.25), 
+                        planetaCinematica.y - (planetaCinematica.raio * 0.25), 
+                        planetaCinematica.raio * 0.1,
+                        planetaCinematica.x, planetaCinematica.y, planetaCinematica.raio
+                    );
+                    gradPlaneta.addColorStop(0, "#4a2a75");
+                    gradPlaneta.addColorStop(0.6, "#21113b");
+                    gradPlaneta.addColorStop(1, "#05020c");
+                    
+                    ctx.fillStyle = gradPlaneta;
+                    ctx.beginPath(); ctx.arc(planetaCinematica.x, planetaCinematica.y, planetaCinematica.raio, 0, Math.PI * 2); ctx.fill();
+                    
+                    ctx.strokeStyle = "rgba(162, 0, 255, 0.35)"; ctx.lineWidth = 2; ctx.stroke();
                 }
 
-                if (imgCockpit.complete && imgCockpit.width > 0) {
-                    ctx.drawImage(imgCockpit, 0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(baseEspacialX, baseEspacialY);
+                ctx.scale(scalaBaseEspacial, scalaBaseEspacial);
+                
+                if (imgBaseEspacial.complete && imgBaseEspacial.width > 0) {
+                    ctx.drawImage(imgBaseEspacial, -imgBaseEspacial.width / 2, -imgBaseEspacial.height / 2);
                 } else {
-                    ctx.fillStyle = "rgba(0, 210, 255, 0.15)";
-                    ctx.fillRect(0, canvas.height - 220, canvas.width, 220);
-                    ctx.fillStyle = "#00d2ff"; ctx.font = "12px sans-serif"; ctx.textAlign = "center";
-                    ctx.fillText("[ SISTEMA DE COCKPIT ATIVO ]", canvas.width / 2, canvas.height - 50);
+                    let gradBase = ctx.createRadialGradient(0, 0, 5, 0, 0, 100);
+                    gradBase.addColorStop(0, "#00d2ff"); gradBase.addColorStop(0.5, "#0044ff"); gradBase.addColorStop(1, "rgba(0,0,0,0)");
+                    ctx.fillStyle = gradBase; ctx.beginPath(); ctx.arc(0, 0, 100, 0, Math.PI * 2); ctx.fill();
                 }
-
-                ctx.fillStyle = "#00ffcc"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
-                ctx.fillText("🛰️ PILOTO AUTOMÁTICO: APROXIMAÇÃO DA DOCA ESTAÇÃO ESPACIAL", canvas.width / 2, 40);
+                ctx.restore();
+                
+                if (imgCockpit.complete && imgCockpit.width > 0) { 
+                    ctx.drawImage(imgCockpit, 0, 0, canvas.width, canvas.height); 
+                } else {
+                    ctx.fillStyle = "rgba(0, 210, 255, 0.15)"; ctx.fillRect(0, canvas.height - 220, canvas.width, 220);
+                }
+                
+                ctx.fillStyle = "#00ffcc"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
+                ctx.fillText("🛰️ DOCAGEM: RETORNANDO PELO PARABRISA DA DIREITA", canvas.width / 2, 40);
             }
 
-            if (subEstadoCinematica === "SALA_CONTROLE" || subEstadoCinematica === "FADE_IN" || subEstadoCinematica === "FADE_OUT") {
-                if (imgSalaControle.complete && imgSalaControle.width > 0) {
-                    ctx.drawImage(imgSalaControle, 0, 0, canvas.width, canvas.height);
-                } else {
-                    ctx.fillStyle = "#0d1026"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = "rgba(0, 255, 200, 0.05)"; ctx.fillRect(30, 100, canvas.width - 60, canvas.height - 200);
-                }
-
-                ctx.fillStyle = "rgba(0, 5, 20, 0.82)"; 
-                ctx.fillRect(0, 0, canvas.width, 160);
-                ctx.strokeStyle = "#00ffcc"; ctx.lineWidth = 1;
-                ctx.beginPath(); ctx.moveTo(0, 160); ctx.lineTo(canvas.width, 160); ctx.stroke();
+            if (subEstadoCinematica === "SALA_CONTROLE" || subEstadoCinematica === "FADE_IN") {
+                if (imgSalaControle.complete && imgSalaControle.width > 0) { ctx.drawImage(imgSalaControle, 0, 0, canvas.width, canvas.height); } 
+                else { ctx.fillStyle = "#0d1026"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+                
+                ctx.fillStyle = "rgba(5, 5, 25, 0.85)"; ctx.fillRect(0, 0, canvas.width, 160);
+                ctx.strokeStyle = "#00ffcc"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, 160); ctx.lineTo(canvas.width, 160); ctx.stroke();
 
                 let textoParaExibir = textoCompletoMensagem.substring(0, caracteresVisiveisTexto);
                 ctx.fillStyle = "#00ffcc"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
-                
                 escreverTextoBlocoQuebrado(ctx, textoParaExibir, canvas.width / 2, 30, canvas.width - 40, 19);
 
                 if (caracteresVisiveisTexto >= textoCompletoMensagem.length) {
-                    ctx.fillStyle = "#00ffff";
-                    ctx.fillRect(painel.btnRota1.x, painel.btnRota1.y, painel.btnRota1.l, painel.btnRota1.a);
-                    ctx.fillStyle = "#000"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-                    ctx.fillText("REPETIR OPERAÇÃO", painel.btnRota1.x + painel.btnRota1.l / 2, painel.btnRota1.y + painel.btnRota1.a / 2);
+                    ctx.fillStyle = "#00ffcc"; ctx.fillRect(painel.btnOrion.x, painel.btnOrion.y, painel.btnOrion.l, painel.btnOrion.a);
+                    ctx.fillStyle = "#000"; ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+                    ctx.fillText("MISSÃO ORION", painel.btnOrion.x + painel.btnOrion.l / 2, painel.btnOrion.y + painel.btnOrion.a / 2);
 
-                    ctx.fillStyle = "#ffaa00";
-                    ctx.fillRect(painel.btnRota2.x, painel.btnRota2.y, painel.btnRota2.l, painel.btnRota2.a);
-                    ctx.fillStyle = "#000"; ctx.font = "bold 12px sans-serif"; ctx.textAlign = "center";
-                    ctx.fillText("PRÓXIMA ROTA (V1.5)", painel.btnRota2.x + painel.btnRota2.l / 2, painel.btnRota2.y + painel.btnRota2.a / 2);
+                    ctx.fillStyle = "#ffaa00"; ctx.fillRect(painel.btnPegasus.x, painel.btnPegasus.y, painel.btnPegasus.l, painel.btnPegasus.a);
+                    ctx.fillStyle = "#000"; ctx.font = "bold 11px sans-serif";
+                    ctx.fillText("PEGASUS", painel.btnPegasus.x + painel.btnPegasus.l / 2, painel.btnPegasus.y + painel.btnPegasus.a / 2);
+
+                    ctx.fillStyle = "#e000ff"; ctx.fillRect(painel.btnAlfaCentauri.x, painel.btnAlfaCentauri.y, painel.btnAlfaCentauri.l, painel.btnAlfaCentauri.a);
+                    ctx.fillStyle = "#fff"; ctx.font = "bold 11px sans-serif";
+                    ctx.fillText("CENTAURI", painel.btnAlfaCentauri.x + painel.btnAlfaCentauri.l / 2, painel.btnAlfaCentauri.y + painel.btnAlfaCentauri.a / 2);
                 }
             }
-
-            if (opacidadeFade > 0) {
-                ctx.fillStyle = "rgba(0, 0, 0, " + opacidadeFade + ")";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
+            if (opacidadeFade > 0) { ctx.fillStyle = "rgba(0, 0, 0, " + opacidadeFade + ")"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
         }
 
         if (estadoJogo === "TRANSICAO") {
             ctx.fillStyle = "rgba(5, 0, 20, 0.95)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.fillStyle = "#00ffcc"; ctx.font = "bold 22px sans-serif";
+            ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = "#00ffcc"; ctx.font = "bold 22px sans-serif";
             
             if (faseAtual === 1) {
                 ctx.fillText("PANDEMIA CONTROLADA!", canvas.width / 2, canvas.height / 2 - 40);
-                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif";
-                ctx.fillText("FASE 2: Cuidado com os buracos negros!", canvas.width / 2, canvas.height / 2 + 10);
-                ctx.fillStyle = "#ff5500"; ctx.font = "bold 15px sans-serif";
-                ctx.fillText("ZONA MAGNÉTICA", canvas.width / 2, canvas.height / 2 + 45);
+                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif"; ctx.fillText("FASE 2: Cuidado com os buracos negros!", canvas.width / 2, canvas.height / 2 + 10);
+                ctx.fillStyle = "#ff5500"; ctx.font = "bold 15px sans-serif"; ctx.fillText("ZONA MAGNÉTICA", canvas.width / 2, canvas.height / 2 + 45);
             } else if (faseAtual === 2) {
                 ctx.fillText("ZONA MAGNÉTICA SUPERADA!", canvas.width / 2, canvas.height / 2 - 40);
-                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif";
-                ctx.fillText("FASE 3: Alerta de Criadouro Máximo!", canvas.width / 2, canvas.height / 2 + 10);
-                ctx.fillStyle = "#ff2244"; ctx.font = "bold 17px sans-serif";
-                ctx.fillText("CHEFE FINAL: O DENGOSÃO EMERGIU!", canvas.width / 2, canvas.height / 2 + 45);
+                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif"; ctx.fillText("FASE 3: Alerta de Criadouro Máximo!", canvas.width / 2, canvas.height / 2 + 10);
+                ctx.fillStyle = "#ff2244"; ctx.font = "bold 17px sans-serif"; ctx.fillText("CHEFE FINAL: O DENGOSÃO EMERGIU!", canvas.width / 2, canvas.height / 2 + 45);
             } else if (faseAtual === 3) {
                 ctx.fillText("O DENGOSÃO FOI ANIQUILADO!", canvas.width / 2, canvas.height / 2 - 40);
-                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif";
-                ctx.fillText("FASE 4: Dobra Espacial Descontrolada!", canvas.width / 2, canvas.height / 2 + 10);
-                ctx.fillStyle = "#ffcc00"; ctx.font = "bold 17px sans-serif";
-                ctx.fillText("PERIGO: CINTURÃO DE ASTEROIDES!", canvas.width / 2, canvas.height / 2 + 45);
+                ctx.fillStyle = "#ffffff"; ctx.font = "bold 16px sans-serif"; ctx.fillText("FASE 4: Dobra Espacial Descontrolada!", canvas.width / 2, canvas.height / 2 + 10);
+                ctx.fillStyle = "#ffcc00"; ctx.font = "bold 17px sans-serif"; ctx.fillText("PERIGO: CINTURÃO DE ASTEROIDES!", canvas.width / 2, canvas.height / 2 + 45);
             }
         }
 
@@ -1206,39 +1666,11 @@
             ctx.fillText("INICIAR JOGO", canvas.width / 2, painel.btnIniciar.y + 25);
         }
 
-        if (estadoJogo === "GAMEOVER") {
-            ctx.fillStyle = "rgba(15, 0, 5, 0.95)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.fillStyle = "#ff2244"; ctx.font = "bold 36px sans-serif";
-            ctx.fillText("FIM DE JOGO", canvas.width / 2, canvas.height / 2 - 40);
-            ctx.fillStyle = "#ffffff"; ctx.font = "16px sans-serif";
-            ctx.fillText("Placar: " + pontuacao, canvas.width / 2, canvas.height / 2 + 15);
-            
-            ctx.fillStyle = "#ffcc00"; ctx.fillRect(painel.btnIniciar.x, painel.btnIniciar.y, painel.btnIniciar.l, painel.btnIniciar.a);
-            ctx.fillStyle = "#000"; ctx.font = "bold 15px sans-serif";
-            ctx.fillText("JOGAR DE NOVO", canvas.width / 2, painel.btnIniciar.y + 25);
+        if (window.MochilaModulo && typeof window.MochilaModulo.render === "function") {
+            window.MochilaModulo.render();
         }
 
         ctx.restore();
-    }
-
-    function escreverTextoBlocoQuebrado(contexto, texto, x, y, larguraMaxima, espacamentoLinha) {
-        let palavras = texto.split(' ');
-        let linha = '';
-        let posY = y;
-
-        for (let n = 0; n < palavras.length; n++) {
-            let linhaTeste = linha + palavras[n] + ' ';
-            let metricas = contexto.measureText(linhaTeste);
-            if (metricas.width > larguraMaxima && n > 0) {
-                contexto.fillText(linha, x, posY);
-                linha = palavras[n] + ' ';
-                posY += espacamentoLinha;
-            } else {
-                linha = linhaTeste;
-            }
-        }
-        contexto.fillText(linha, x, posY);
     }
 
     function loop(timestamp) {
@@ -1251,6 +1683,394 @@
     window.addEventListener("resize", ajustarTela);
     window.addEventListener("orientationchange", ajustarTela);
     requestAnimationFrame(loop);
+	
+    // =========================================================================
+    // --- MÓDULO ISOLADO: SISTEMA DE MOCHILA AUTOMÁTICA FERRATECH V2.1 ---
+    // =========================================================================
+    (function() {
+        let saldoMochila = parseInt(localStorage.getItem("ferratech_creditos")) || 0;
+
+        let mochilaState = {
+            visivel: false,
+            fase: "FECHADA",       
+            y: -120,              
+            yAlvo: 30,            
+            largura: 55,          
+            altura: 68,           
+            alpha: 0,
+            tempoAberta: 0,
+            displaySaldo: saldoMochila,
+            anguloTampa: 0,        
+            travaGatilho: false    
+        };
+
+        let moedasAnimacao = [];
+
+        window.MochilaIntercambio.forçarGatilho = function() {
+            if (!mochilaState.visivel && !mochilaState.travaGatilho) {
+                mochilaState.travaGatilho = true;
+                dispararAnimacaoMochila();
+            }
+        };
+
+        function dispararAnimacaoMochila() {
+            mochilaState.visivel = true;
+            mochilaState.fase = "ABRINDO";
+            mochilaState.y = -120;
+            mochilaState.alpha = 0;
+            mochilaState.tempoAberta = 0;
+            mochilaState.anguloTampa = 0;
+            moedasAnimacao = [];
+
+            saldoMochila += 1; 
+            localStorage.setItem("ferratech_creditos", saldoMochila);
+        }
+
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height - radius);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            if (stroke) ctx.stroke();
+        }
+
+        window.MochilaModulo = {
+            update: function() {
+                if (!mochilaState.visivel) return;
+
+                if (mochilaState.fase === "ABRINDO") {
+                    mochilaState.y += (mochilaState.yAlvo - mochilaState.y) * 0.1;
+                    if (mochilaState.alpha < 1) mochilaState.alpha += 0.08;
+
+                    if (Math.abs(mochilaState.y - mochilaState.yAlvo) < 1) {
+                        mochilaState.y = mochilaState.yAlvo;
+                        mochilaState.fase = "TAMPA_ABRINDO";
+                    }
+                }
+
+                if (mochilaState.fase === "TAMPA_ABRINDO") {
+                    mochilaState.anguloTampa += 0.1;
+                    if (mochilaState.anguloTampa >= 1) {
+                        mochilaState.anguloTampa = 1;
+                        mochilaState.fase = "ABERTA";
+
+                        let canvasW = (typeof canvas !== "undefined" ? canvas.width : 400);
+                        let posXFixa = canvasW - 25 - (mochilaState.largura / 2);
+                        for (let i = 0; i < 5; i++) {
+                            moedasAnimacao.push({
+                                x: posXFixa + (Math.random() * 10 - 5),
+                                y: mochilaState.y - 35 - (i * 18),
+                                velY: 3.2 + Math.random() * 1.3,
+                                coletada: false
+                            });
+                        }
+                    }
+                }
+
+                if (mochilaState.fase === "ABERTA") {
+                    let todasColetadas = true;
+
+                    moedasAnimacao.forEach(moeda => {
+                        if (!moeda.coletada) {
+                            moeda.y += moeda.velY;
+                            todasColetadas = false;
+
+                            if (moeda.y >= mochilaState.y + 10) {
+                                moeda.coletada = true;
+                                try { const som = new Audio("til.mp3"); som.volume = 0.12; som.play().catch(()=>{}); } catch(e){}
+                            }
+                        }
+                    });
+
+                    if (todasColetadas) {
+                        mochilaState.tempoAberta++;
+                        mochilaState.displaySaldo = saldoMochila;
+                        
+                        if (mochilaState.tempoAberta > 35) {
+                            mochilaState.fase = "TAMPA_FECHANDO";
+                        }
+                    }
+                }
+
+                if (mochilaState.fase === "TAMPA_FECHANDO") {
+                    mochilaState.anguloTampa -= 0.15;
+                    if (mochilaState.anguloTampa <= 0) {
+                        mochilaState.anguloTampa = 0;
+                        mochilaState.fase = "FECHANDO";
+                    }
+                }
+
+                if (mochilaState.fase === "FECHANDO") {
+                    mochilaState.y += (-130 - mochilaState.y) * 0.08;
+                    if (mochilaState.alpha > 0) mochilaState.alpha -= 0.08;
+
+                    if (mochilaState.y <= -110) {
+                        mochilaState.visivel = false;
+                        mochilaState.fase = "FECHADA";
+                        mochilaState.travaGatilho = false;
+                    }
+                }
+            },
+            render: function() {
+                if (!mochilaState.visivel || typeof ctx === "undefined" || typeof canvas === "undefined") return;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, Math.min(1, mochilaState.alpha));
+
+                let recuoBorda = 25;
+                let mX = canvas.width - mochilaState.largura - recuoBorda;
+                let mY = mochilaState.y;
+                let centroX = mX + mochilaState.largura / 2;
+
+                ctx.fillStyle = "#FFD700"; ctx.strokeStyle = "#B8860B"; ctx.lineWidth = 1;
+                moedasAnimacao.forEach(moeda => {
+                    if (!moeda.coletada && moeda.y < mY + 12) {
+                        ctx.beginPath(); ctx.arc(moeda.x, moeda.y, 3.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                    }
+                });
+
+                ctx.fillStyle = "#151c28"; ctx.strokeStyle = "#25334d"; ctx.lineWidth = 1.5;
+                roundRect(ctx, mX - 6, mY + 12, 8, mochilaState.altura - 24, 4, true, true);
+                roundRect(ctx, mX + mochilaState.largura - 2, mY + 12, 8, mochilaState.altura - 24, 4, true, true);
+
+                ctx.strokeStyle = "#0d121c"; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.arc(centroX, mY + 4, 11, Math.PI, 0); ctx.stroke();
+
+                ctx.fillStyle = "#1e2530"; ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 2;
+                roundRect(ctx, mX, mY, mochilaState.largura, mochilaState.altura, 8, true, true);
+
+                ctx.fillStyle = "#141923"; ctx.strokeStyle = "#009900"; ctx.lineWidth = 1;
+                roundRect(ctx, mX + 5, mY + 28, mochilaState.largura - 10, mochilaState.altura - 33, 4, true, true);
+
+                ctx.save(); ctx.translate(centroX, mY + 6); ctx.scale(1, 1 - (mochilaState.anguloTampa * 1.4)); 
+                ctx.fillStyle = "#2d384c"; ctx.strokeStyle = "#00ff00"; ctx.lineWidth = 1.5;
+                roundRect(ctx, -mochilaState.largura/2 + 3, -7, mochilaState.largura - 6, 13, 3, true, true);
+                ctx.fillStyle = "#5a6982"; ctx.fillRect(-3, 2, 6, 4); ctx.restore();
+
+                if (mochilaState.anguloTampa > 0.2) {
+                    ctx.fillStyle = "#05070a"; ctx.fillRect(mX + 6, mY + 5, mochilaState.largura - 12, 4);
+                }
+
+                let dX = mX + 9; let dY = mY + mochilaState.altura - 22; let dL = mochilaState.largura - 18; let dA = 15;
+                ctx.fillStyle = "#000000"; ctx.strokeStyle = "#2d3748"; ctx.lineWidth = 1.5;
+                roundRect(ctx, dX, dY, dL, dA, 3, true, true);
+
+                ctx.fillStyle = "#00ff00"; ctx.font = "bold 9px monospace"; ctx.textAlign = "center";
+                ctx.fillText(`FT:${mochilaState.displaySaldo}`, centroX, dY + 11);
+                ctx.restore();
+            },
+            reset: function() {
+                mochilaState.visivel = false;
+                mochilaState.fase = "FECHADA";
+                mochilaState.travaGatilho = false;
+                mochilaState.displaySaldo = parseInt(localStorage.getItem("ferratech_creditos")) || 0;
+            }
+        };
+    })();
+	
+    // ========================================================
+    // 🖱️ CONTROLE DE CLIQUES DINÂMICO
+    // ========================================================
+    canvas.addEventListener('click', function(evento) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = evento.clientX - rect.left;
+        const mouseY = evento.clientY - rect.top;
+
+        if (estadoJogo === "START") {
+            if (mouseX >= painel.btnIniciar.x && mouseX <= painel.btnIniciar.x + painel.btnIniciar.l &&
+                mouseY >= painel.btnIniciar.y && mouseY <= painel.btnIniciar.y + painel.btnIniciar.a) {
+                reiniciarJogo(); 
+            }
+        }
+        
+      if (estadoJogo === "CINEMATICA_FINAL" && subEstadoCinematica === "SALA_CONTROLE") {
+        if (mouseX >= painel.btnOrion.x && mouseX <= painel.btnOrion.x + painel.btnOrion.l &&
+            mouseY >= painel.btnOrion.y && mouseY <= painel.btnOrion.y + painel.btnOrion.a) {
+            
+            try {
+                window.location.href = "missao_orion.html";
+                somCombate.pause();
+                somSuspense.play().catch(() => {});
+            } catch(e) {
+                window.location.href = "missao_orion.html";
+            }
+        }
+    }
+	});
+	
+	// Desse jeito o código só roda se o botão realmente existir no HTML, evitando travar a Splash
+	const btnMissao = document.getElementById('botao-missao1');
+	if (btnMissao) {
+    btnMissao.addEventListener('click', iniciarMissao);
+	}
+	
+// ====================================================================
+// INICIALIZAÇÃO DIRETA (SPLASH REMOVIDO PARA APP INVENTOR)
+// ====================================================================
+
+// 1. Garante o cálculo do tamanho certo na abertura imediata
+if (typeof ajustarTela === "function") {
+    ajustarTela();
+}
+
+// 2. Remove a cortina de splash imediatamente (caso exista no HTML)
+const splash = document.getElementById('tela-splash');
+if (splash) {
+    splash.remove(); // Deleta a cortina direto da memória
+}
+
+// 3. Força o motor do Canvas a acordar em tela cheia na hora
+window.dispatchEvent(new Event('resize'));
+if (typeof ajustarTela === "function") {
+    ajustarTela();
+}
+
+console.log("🚀 Nave ASH Pronta! Jogo iniciado direto com sucesso.");
+
+
+</script>
+
+<button id="menu-credito-fixo" onclick="abrirLojaFerratech()" style="
+        position: absolute !important;
+        top: 150px !important; 
+        right: 15px !important; 
+        z-index: 100000000 !important;
+        background: transparent !important; 
+        border: none !important;            
+        cursor: pointer !important;
+        padding: 0 !important;
+    ">
+        <img id="botao-carteirinha" src="saldo.png" alt="Meu Saldo" style="width: 40px; height: 40px; display: block;">
+    </button>
+<script>
+	function fecharLojaFerratech() {
+    // 1. Oculta a janela visual da loja
+    const janelaLoja = document.getElementById('janela-loja-ferratech');
+    if (janelaLoja) {
+        janelaLoja.style.display = 'none';
+		const carteirinha = document.getElementById('botao-carteirinha');
+    if (carteirinha) {
+        carteirinha.style.display = 'block'; // <--- AQUI É 'block' para aparecer!
+    }
+    }
+    
+    // 2. RETORNA O COMBATE: Despausa o motor do jogo!
+    jogoPausado = false; 
+    
+    console.log("Retornando ao combate espacial...");
+}
+</script>
+
+<div id="janela-loja-ferratech" style="
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    background-color: rgba(0, 0, 0, 0.95); 
+    z-index: 2147483647; 
+    justify-content: center; 
+    align-items: center; 
+    font-family: 'Courier New', monospace; 
+    color: #fff;
+">
+    <div style="background: #111; border: 3px solid #00ffcc; border-radius: 12px; width: 90%; max-width: 450px; padding: 20px; box-shadow: 0 0 25px #00ffcc; text-align: center;">
+        <h2 style="color: #00ffcc; margin-top: 0; text-shadow: 0 0 5px #00ffcc;">LOJA FERRATECH</h2>
+        <p style="font-size: 16px; border-bottom: 1px dashed #333; padding-bottom: 10px;">
+            🎒 Saldo da Mochila: <span id="loja-saldo-moedas" style="color: #ffaa00; font-weight: bold;">0</span> Moedas
+        </p>
+        
+        <div style="margin: 20px 0; text-align: left; display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #00ffcc;">
+                <div><strong style="color: #00ffcc;">🛡️ Escudo Modo Deus</strong><br><span style="font-size: 11px; color: #aaa;">Invencibilidade por 5s</span></div>
+                <button onclick="comprarItemLoja('escudo', 50)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">50 M</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #ff3333;">
+                <div><strong style="color: #ff3333;">🚀 Mísseis Extras</strong><br><span style="font-size: 11px; color: #aaa;">+5 Projéteis pesados</span></div>
+                <button onclick="comprarItemLoja('misseis', 30)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">30 M</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 6px; border-left: 4px solid #ffff00;">
+                <div><strong style="color: #ffff00;">⚡ Laser Contínuo</strong><br><span style="font-size: 11px; color: #aaa;">Segure para disparar contínuo</span></div>
+                <button id="btn-comprar-laser" onclick="comprarItemLoja('laser', 100)" style="background: #ffaa00; border: none; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; color:#000;">100 M</button>
+            </div>
+        </div>
+
+        <button onclick="fecharLojaFerratech()" style="background: #00ffcc; color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; font-size: 14px; border-radius: 6px; cursor: pointer; margin-top: 10px;">
+            ◀ VOLTAR PARA O COMBATE
+        </button>
+    </div>
+</div>
+
+<script>
+	// Se não existir nada salvo na carteira do navegador, começa do ZERO
+if (localStorage.getItem("ferratech_creditos") === null) {
+    localStorage.setItem("ferratech_creditos", 0); 
+}
+
+function atualizarInterfaceLoja() {
+    // Sincroniza o valor persistente com a variável de execução
+    moedasColetadas = parseInt(localStorage.getItem("ferratech_creditos")) || 0;
+    
+    // Atualiza o elemento de texto da Loja HTML
+    const elementoSaldo = document.getElementById('loja-saldo-moedas');
+    if (elementoSaldo) {
+        elementoSaldo.innerText = moedasColetadas;
+    }
+}
+
+function abrirLojaFerratech() {
+    console.log("Carteira Ferratech acessada com sucesso!");
+    jogoPausado = true; // Pausa o motor do jogo enquanto compra
+    atualizarInterfaceLoja(); // Sincroniza antes de exibir
+    document.getElementById('janela-loja-ferratech').style.display = 'flex';
+	
+	const carteirinha = document.getElementById('botao-carteirinha');
+    if (carteirinha) {
+        carteirinha.style.display = 'none'; // <--- AQUI É 'none' para sumir!
+    }
+}
+
+function comprarItemLoja(item, custo) {
+    // 1. Puxa o saldo real direto do banco local
+    let moedasAtuais = parseInt(localStorage.getItem("ferratech_creditos")) || 0;
+    
+    // 2. Validação matemática de fundos
+    if (moedasAtuais >= custo) {
+        moedasAtuais -= custo; // Deduz o valor
+        
+        // 3. Salva imediatamente o novo saldo
+        localStorage.setItem("ferratech_creditos", moedasAtuais);
+        
+        // 4. Sincroniza a memória de execução e a interface
+        atualizarInterfaceLoja();
+        
+        // --- APLICAÇÃO DOS EFEITOS DOS ITENS NO JOGO ---
+        if (item === 'escudo') {
+            escudoAtivo = true; // Certifique-se de ter essa flag criada no escopo global
+            setTimeout(() => { escudoAtivo = false; }, 5000);
+            alert("🛡️ MÓDULO DE ESCUDO ATIVADO POR 5 SEGUNDOS!");
+        } else if (item === 'misseis') {
+            qtdMisseis += 5;
+            alert("🚀 +5 MÍSSEIS TÁTICOS CARREGADOS! (Use: Baixo, Baixo, Cima)");
+        } else if (item === 'laser') {
+            laserContinuoDisponivel = true;
+            alert("⚡ MÓDULO DE LASER REFORÇADO CONECTADO!");
+        } else if (item === 'lanche' || item === 'refri') {
+            x_jogador.vida = Math.min(x_jogador.vidaMax, x_jogador.vida + 3); // Cura 3 pontos de vida
+            alert("🍔 SISTEMAS BIOLÓGICOS E ENERGIA REESTABELECIDOS!");
+        }
+    } else {
+        alert("❌ SALDO INSUFICIENTE! Abata mais invasores para coletar moedas.");
+    }
+}
 </script>
 </body>
 </html>
