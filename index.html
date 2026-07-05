@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Star Fighter - Ferratech Jogos Campanha Social</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WHGRWM2R8F"></script>
-	<script>
-// Seus direitos autorais
+	const cacheName = 'starfighter-v1';
+const assets = [
+  '/Star_Figther_Orion/',
+  '/Star_Figther_Orion/index.html',
+  '/Star_Figther_Orion/logo_star_fight.png'
+];
+
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(cacheName).then(cache => {
+      return cache.addAll(assets);
+    })
+  );
+});
+
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(response => {
+      return response || fetch(e.request);
+    })
+  );
+});
+	// Seus direitos autorais
     const MENSAGEM_COPYRIGHT = "© Direitos Autorais Reservados - Star Fighter (Cmd. Mauro).";
 
     // TRUQUE DE MESTRE: Se você colocar ?admin=1 no final do link do GitHub, a segurança DESLIGA!
